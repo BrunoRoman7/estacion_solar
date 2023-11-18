@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -21,21 +22,27 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .userDetailsService(userService)
-            .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/","/webjars/**", "/resources/**","/css/**").permitAll()
-                .requestMatchers("/").permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin((form) -> form.permitAll())
-            .logout((logout) -> logout.permitAll());
+                .userDetailsService(userService)
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/webjars/**", "/resources/**", "/css/**").permitAll()
+                        .requestMatchers("/").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin((form) -> form
+                        .permitAll()
+                        .defaultSuccessUrl("/users")
+                )
+                .logout().
+                logoutUrl("/logout").
+                logoutSuccessUrl("/login");
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
+
