@@ -1,12 +1,13 @@
 package ar.edu.unnoba.poo2023.controller;
 
-
-import ar.edu.unnoba.poo.model.User;
-import ar.edu.unnoba.poo.service.UserService;
+import ar.edu.unnoba.poo2023.model.User;
+import ar.edu.unnoba.poo2023.service.CSVDataReader;
+import ar.edu.unnoba.poo2023.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequestMapping("/users")
@@ -14,6 +15,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private CSVDataReader csvdataReader;
+
 
 
     @GetMapping
@@ -38,10 +42,9 @@ public class UserController {
             return "users/new";
         }
 
-        // Procesar y guardar el usuario si no hay errores de validación y se completaron todos los campos
-        // Puedes agregar aquí la lógica para guardar el usuario en la base de datos
+
         userService.create(user);
-        return "redirect:/users"; // Redirecciona a la página de usuarios u otra página de éxito
+        return "redirect:/users";
     }
 
     @GetMapping("/{id}")
@@ -49,6 +52,7 @@ public class UserController {
         model.addAttribute("user", userService.getUserByTaxID(id));
         return "users/view";
     }
+
 
     /*
 

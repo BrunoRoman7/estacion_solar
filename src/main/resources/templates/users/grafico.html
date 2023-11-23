@@ -1,10 +1,150 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Gráfico de Radiación con D3.js</title>
+    <!-- Agrega las referencias a Bootstrap y jQuery -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Agrega la referencia a D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .loader {
+            /* Estilos anteriores... */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .loader img {
+            display: block;
+            margin: 0 auto; /* Centra la imagen */
+        }
+
+        .loader p {
+            margin-top: 10px; /* Ajusta el margen superior del párrafo */
+            text-align: center; /* Centra el texto horizontalmente */
+            font-weight: bold; /* Opcional: Añade negrita al texto */
+        }
+
+
+        /* Oculta el contenido principal al principio */
+        #mainContent {
+            display: none;
+        }
+
+        .resize-image {
+            /* Ajusta el tamaño de la imagen */
+            width: 50%; /* Puedes cambiar este valor según tu preferencia */
+            height: auto; /* Para mantener la proporción de la imagen */
+        }
+    </style>
+
+
 </head>
 <body>
-$END$
+<div id="loader" class="loader">
+    <img src="sol.gif" alt="Cargando...">
+    <p>Cargando datos...</p>
+</div>
+
+<div id="mainContent" style="display: none;">
+<div class="container mt-4">
+    <div class="row">
+        <div class="col">
+            <label for="desde">Desde:</label>
+            <input type="date" class="form-control" id="desde" value="2023-07-01">
+        </div>
+        <div class="col">
+            <label for="hasta">Hasta:</label>
+            <input type="date" class="form-control" id="hasta" value="2023-07-31">
+        </div>
+    </div>
+    <button class="btn btn-primary mt-3" onclick="generarGrafico()">Generar Gráfico</button>
+</div>
+</div>
+
+
+
+<svg id="myChart" width="600" height="600"></svg>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        generarGrafico(); // Llama a la función al cargar el DOM
+
+    });
+    function generarGrafico() {
+        const desde = document.getElementById('desde').value;
+        const hasta = document.getElementById('hasta').value;
+
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('loader').querySelector('p').innerText = 'Consultando a la base de datos...';
+        document.getElementById('mainContent').style.display = 'none';
+
+
+        fetch(`http://localhost:8080/radiacionporfechas?desde=${desde}&hasta=${hasta}`)
+            .then(response => {
+
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(datosEjemplo => {
+
+                    document.getElementById('loader').querySelector('p').innerText = 'Procesando datos...';
+
+                const fechas = datosEjemplo.map(dato => new Date(dato.datosSensor.fecha));
+                const radiaciones = datosEjemplo.map(dato => dato.radiacion);
+
+
+
+                const svg = d3.select("#myChart");
+                const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+                const width = +svg.attr("width") - margin.left - margin.right;
+                const height = +svg.attr("height") - margin.top - margin.bottom;
+
+                const x = d3.scaleTime()
+                    .domain(d3.extent(fechas))
+                    .range([margin.left, width - margin.right]);
+
+                const y = d3.scaleLinear()
+                    .domain([0, d3.max(radiaciones)])
+                    .range([height - margin.bottom, margin.top]);
+
+                const line = d3.line()
+                    .x((d, i) => x(fechas[i]))
+                    .y(d => y(d));
+
+                svg.append("path")
+                    .datum(radiaciones)
+                    .attr("fill", "none")
+                    .attr("stroke", "steelblue")
+                    .attr("stroke-width", 1.5)
+                    .attr("d", line);
+
+                // Añadir ejes
+                svg.append("g")
+                    .attr("transform", `translate(0,${height - margin.bottom})`)
+                    .call(d3.axisBottom(x));
+
+                svg.append("g")
+                    .attr("transform", `translate(${margin.left},0)`)
+                    .call(d3.axisLeft(y));
+                    document.getElementById('loader').style.display = 'none';
+                    // Muestra el contenido principal
+                    document.getElementById('mainContent').style.display = 'block';
+            }
+            )
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    }
+</script>
 </body>
 </html>
+

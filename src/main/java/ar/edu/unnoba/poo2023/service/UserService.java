@@ -1,6 +1,6 @@
 package ar.edu.unnoba.poo2023.service;
 
-import ar.edu.unnoba.poo.model.User;
+import ar.edu.unnoba.poo2023.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;

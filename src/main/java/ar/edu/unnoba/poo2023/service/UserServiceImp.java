@@ -1,14 +1,12 @@
-package ar.edu.unnoba.poo.service;
-import ar.edu.unnoba.poo.repository.UserRepository;
+package ar.edu.unnoba.poo2023.service;
 
-
-import ar.edu.unnoba.poo.model.User;
+import ar.edu.unnoba.poo2023.model.User;
+import ar.edu.unnoba.poo2023.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 

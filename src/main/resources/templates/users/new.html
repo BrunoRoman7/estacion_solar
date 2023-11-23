@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Usuario</title>
+</head>
+<body>
+<div>Nuevo Usuario</div>
+<form action="#" th:action="@{/Template/users}" th:object="${user}" method="post">
+    <table>
+        <tr><td>id</td><td><input type="text" th:field="*{id}"/></td></tr>
+        <tr><td>username</td><td><input type="text" th:field="*{username}"/></td></tr>
+        <tr><td>apellido</td><td><input type="text" th:field="*{apellido}"/></td></tr>
+        <tr><td>email</td><td><input type="text" th:field="*{email}"/></td></tr>
+        <tr><td>password</td><td><input type="text" th:field="*{password}"/></td></tr>
+    </table>
+    <button type="submit" name="newuser">Create</button>
+    <p th:if="${error_incomplete}" class="error-message">
+        <span>Info: </span><span th:text="${error_incomplete}"></span>
+    </p>
+</form>
+
+</body>
+</html>
