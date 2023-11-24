@@ -18,8 +18,10 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
+import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,10 +35,10 @@ public class WeatherController {
     private ResourceLoader resourceLoader;
 
 
-    @GetMapping("/Grafico")
+    @GetMapping("/mediciondiarias")
     public String Grafico(){
 
-        return "users/grafico";
+        return "users/mediciondiarias";
     }
     @GetMapping("/Radiacion")
     @ResponseBody
@@ -55,6 +57,18 @@ public class WeatherController {
 
         // Lee el archivo en forma de Resource
         Resource resource = resourceLoader.getResource("classpath:/templates/static/images/sol.gif");
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_GIF)
+                .body(resource);
+    }
+    @GetMapping("/solazul.png")
+    @ResponseBody
+    public ResponseEntity<Resource> geticonoazul() throws IOException {
+
+
+        // Lee el archivo en forma de Resource
+        Resource resource = resourceLoader.getResource("classpath:/templates/static/images/solazul.png");
 
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_GIF)
@@ -96,6 +110,30 @@ try {
 
         return weatherServiceImplementation.getRadiacionPorFechas(fechaDesde, fechaHasta);
     }
+    @GetMapping("/radiacionporfecha")
+    @ResponseBody
+    public List<Irradiacion> datosClima(@RequestParam(required = false) String fecha) {
+        if (fecha != null && !fecha.isEmpty()) {
+            try {
+                LocalDate date = LocalDate.parse(fecha);
+                int año = date.getYear();
+                int mes = date.getMonthValue();
+                int dia = date.getDayOfMonth();
+
+                return weatherServiceImplementation.getRadiacionPorFecha(dia, mes, año);
+            } catch (DateTimeParseException e) {
+                System.out.println("Exception :" + e);
+            }
+        }
+
+
+        Collections Collections = null;
+        return Collections.emptyList();
+    }
+
+
+
+
 
     @GetMapping("/irradiacionMaxima")
     @ResponseBody

@@ -41,6 +41,19 @@
             width: 50%; /* Puedes cambiar este valor según tu preferencia */
             height: auto; /* Para mantener la proporción de la imagen */
         }
+        .title {
+            font-size: 2em;
+            text-align: center;
+        }
+        .resize-image-small {
+            width: 200px; /* Define el ancho deseado */
+            height: auto; /* Mantén la proporción */
+        }
+        .blue-text {
+            color: #06a0e3;
+        }
+
+
     </style>
 
 
@@ -52,20 +65,25 @@
 </div>
 
 <div id="mainContent" style="display: none;">
-<div class="container mt-4">
-    <div class="row">
-        <div class="col">
-            <label for="desde">Desde:</label>
-            <input type="date" class="form-control" id="desde" value="2023-07-01">
+    <h1 class="title blue-text">MEDICIONES DIARIAS <img src="solazul.png" alt="Foto" class="resize-image-small"></h1>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <label for="desde" class="blue-text">SELECTOR DE FECHA:</label>
+                <input type="date" class="form-control" id="desde" value="2023-07-01">
+            </div>
         </div>
-        <div class="col">
-            <label for="hasta">Hasta:</label>
-            <input type="date" class="form-control" id="hasta" value="2023-07-31">
+        <div class="card mt-3" style="width: 200px;">
+            <div class="card-body">
+                <h5 class="card-title blue-text">IRRADIANCIA PROMEDIO:</h5>
+                <p class="card-text blue-text" id="resultado">...</p>
+            </div>
         </div>
+        <button class="btn btn-primary mt-3" onclick="generarGrafico()">Generar Gráfico</button>
     </div>
-    <button class="btn btn-primary mt-3" onclick="generarGrafico()">Generar Gráfico</button>
 </div>
-</div>
+
 
 
 
@@ -77,15 +95,14 @@
 
     });
     function generarGrafico() {
-        const desde = document.getElementById('desde').value;
-        const hasta = document.getElementById('hasta').value;
+        const fecha = document.getElementById('desde').value;
+        console.log(fecha);
 
         document.getElementById('loader').style.display = 'block';
         document.getElementById('loader').querySelector('p').innerText = 'Consultando a la base de datos...';
         document.getElementById('mainContent').style.display = 'none';
 
-
-        fetch(`http://localhost:8080/radiacionporfechas?desde=${desde}&hasta=${hasta}`)
+        fetch(`http://localhost:8080/radiacionporfecha?fecha=${fecha}`)
             .then(response => {
 
 
@@ -97,13 +114,21 @@
             .then(datosEjemplo => {
 
                     document.getElementById('loader').querySelector('p').innerText = 'Procesando datos...';
-
+                console.log(datosEjemplo);
                 const fechas = datosEjemplo.map(dato => new Date(dato.datosSensor.fecha));
                 const radiaciones = datosEjemplo.map(dato => dato.radiacion);
 
+                    const totalRadiacion = radiaciones.reduce((total, radiacion) => total + radiacion, 0);
+                    const promedioTotal = totalRadiacion / radiaciones.length;
+
+                    console.log('Promedio de todos los datos de radiación:', promedioTotal);
+                    const resultadoHTML = document.getElementById('resultado');
+                    resultadoHTML.innerHTML = `<strong>${promedioTotal} </strong>`;
 
 
-                const svg = d3.select("#myChart");
+
+
+                    const svg = d3.select("#myChart");
                 const margin = { top: 20, right: 30, bottom: 30, left: 40 };
                 const width = +svg.attr("width") - margin.left - margin.right;
                 const height = +svg.attr("height") - margin.top - margin.bottom;

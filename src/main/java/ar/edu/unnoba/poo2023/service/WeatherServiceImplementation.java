@@ -26,6 +26,9 @@ public class WeatherServiceImplementation implements WeatherService{
     public List<Irradiacion> getRadiacionPorFechas(Timestamp desde, Timestamp hasta){
         return this.irradiacionRepository.obtenerIrradiacionPorFechas(desde,hasta);
     }
+    public List<Irradiacion> getRadiacionPorFecha(int dia,int mes,int año){
+        return this.irradiacionRepository.obtenerIrradiacionPorFecha(dia,año,mes);
+    }
 
     @Override
     public List<Irradiacion> getRadiacionMensual(Timestamp mes) {
