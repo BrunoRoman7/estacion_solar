@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Date;
 import java.util.List;
 
@@ -96,6 +97,30 @@ try {
         return weatherServiceImplementation.getRadiacionPorFechas(fechaDesde, fechaHasta);
     }
 
+    @GetMapping("/irradiacionMaxima")
+    @ResponseBody
+    public Double irradianciaMax(Timestamp mes){
+        List<Irradiacion> list = weatherServiceImplementation.getRadiacionMensual(mes);
+        Double cant= (double) 0;
+        for(Irradiacion i: list){
+            if (i.getRadiacion() > cant){
+                cant = i.getRadiacion();
+            }
+        }
+        return cant;
+    }
+
+    @GetMapping("/irradiacionPromedio")
+    @ResponseBody
+    public Double irradianciaPromedio(Timestamp mes){
+        List<Irradiacion> list = weatherServiceImplementation.getRadiacionMensual(mes);
+        int cant = list.size();
+        Double suma= (double) 0;
+        for(Irradiacion i: list){
+            suma += i.getRadiacion();
+        }
+        return suma/cant;
+    }
 
     @GetMapping("/cargabd")
     public String cargarbd() {

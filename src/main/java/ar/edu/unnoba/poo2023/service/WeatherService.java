@@ -9,8 +9,5 @@ public interface WeatherService {
     public List<Irradiacion> getRadiacion();
     public List<Irradiacion> getRadiacionPorFechas(Timestamp desde, Timestamp hasta);
 
-
-
-
-
+    public List<Irradiacion> getRadiacionMensual(Timestamp mes);
 }

@@ -15,8 +15,7 @@ public interface IrradiacionRepository extends JpaRepository<Irradiacion,Long>  
         @Query("SELECT i FROM Irradiacion i WHERE i.datosSensor.fecha BETWEEN :desde AND :hasta")
         List<Irradiacion> obtenerIrradiacionPorFechas(Timestamp desde, Timestamp hasta);
 
-
-
-
+        @Query("SELECT i FROM Irradiacion i WHERE MONTH(i.datosSensor.fecha) = :mes")
+        List<Irradiacion> obtenerIrradiacionPorMes(Timestamp mes);
 
 }
