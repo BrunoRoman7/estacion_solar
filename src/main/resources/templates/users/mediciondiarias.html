@@ -95,13 +95,20 @@
 
     });
     function generarGrafico() {
+        // Seleccionar el elemento SVG
+        const svgElement = document.getElementById('myChart');
+
+// Limpiar el contenido del SVG
+        while (svgElement.firstChild) {
+            svgElement.removeChild(svgElement.firstChild);
+        }
+
         const fecha = document.getElementById('desde').value;
-        console.log(fecha);
 
         document.getElementById('loader').style.display = 'block';
         document.getElementById('loader').querySelector('p').innerText = 'Consultando a la base de datos...';
         document.getElementById('mainContent').style.display = 'none';
-
+    console.log("Pidiendo los datos ");
         fetch(`http://localhost:8080/radiacionporfecha?fecha=${fecha}`)
             .then(response => {
 
@@ -114,7 +121,7 @@
             .then(datosEjemplo => {
 
                     document.getElementById('loader').querySelector('p').innerText = 'Procesando datos...';
-                console.log(datosEjemplo);
+                console.log("dentro de fetch, antes del grafico");
                 const fechas = datosEjemplo.map(dato => new Date(dato.datosSensor.fecha));
                 const radiaciones = datosEjemplo.map(dato => dato.radiacion);
 
@@ -163,6 +170,7 @@
                     document.getElementById('loader').style.display = 'none';
                     // Muestra el contenido principal
                     document.getElementById('mainContent').style.display = 'block';
+                    console.log("Termino de cargar datos ");
             }
             )
             .catch(error => {
