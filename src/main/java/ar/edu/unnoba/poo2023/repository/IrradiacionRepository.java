@@ -14,13 +14,15 @@ public interface IrradiacionRepository extends JpaRepository<Irradiacion,Long>  
 
         @Query("SELECT i FROM Irradiacion i " +
                 "JOIN i.datosSensor ds " +
-                "WHERE  ds.dia = :targetDay " +
+                "WHERE ds.dia = :targetDay " +
                 "AND ds.año = :targetYear " +
-                "AND ds.mes = :targetMonth")
+                "AND ds.mes = :targetMonth " +
+                "ORDER BY ds.fecha") // Ordenar por fecha
         List<Irradiacion> obtenerIrradiacionPorFecha(
-                                                  @Param("targetDay") int targetDay,
-                                                  @Param("targetYear") int targetYear,
-                                                  @Param("targetMonth") int targetMonth);
+                @Param("targetDay") int targetDay,
+                @Param("targetYear") int targetYear,
+                @Param("targetMonth") int targetMonth);
+
 
 
         @Query("SELECT i FROM Irradiacion i WHERE i.datosSensor.fecha BETWEEN :desde AND :hasta")

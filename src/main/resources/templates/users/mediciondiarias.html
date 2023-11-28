@@ -167,15 +167,45 @@
                 svg.append("g")
                     .attr("transform", `translate(${margin.left},0)`)
                     .call(d3.axisLeft(y));
-                    document.getElementById('loader').style.display = 'none';
-                    // Muestra el contenido principal
-                    document.getElementById('mainContent').style.display = 'block';
-                    console.log("Termino de cargar datos ");
+
+                //dibujar el area bajo la curva
+                const area = d3.area()
+                    .x((d, i) => x(fechas[i])) // Define la posición x
+                    .y0(height - margin.bottom) // Define la base del área (eje y inferior)
+                    .y1(d => y(d)); // Define la posición y (usando los datos de radiaciones)
+
+                svg.append("path")
+                    .datum(radiaciones)
+                    .attr("fill", "steelblue") // Color del área
+                    .attr("opacity", 0.3) // Opacidad del área
+                    .attr("d", area); // Aplica el área bajo la curva
+
+
+                document.getElementById('loader').style.display = 'none';
+                // Muestra el contenido principal
+                document.getElementById('mainContent').style.display = 'block';
+                console.log("Termino de cargar datos ");
+                // Llamar a la función para calcular el área bajo la curva
+                const areaBajoCurva = calcularAreaBajoCurva(fechas, radiaciones);
+                console.log('Área bajo la curva:', areaBajoCurva);
+
             }
-            )
+
+
+
+    )
             .catch(error => {
                 console.error('There has been a problem with your fetch operation:', error);
             });
+    }
+    function calcularAreaBajoCurva(fechas, radiaciones) {
+        let area = 0;
+        for (let i = 0; i < fechas.length - 1; i++) {
+            const base = Math.abs(fechas[i + 1] - fechas[i]); // Ancho del trapecio
+            const alturaPromedio = (radiaciones[i] + radiaciones[i + 1]) / 2; // Altura promedio de los dos puntos
+            area += base * alturaPromedio; // Área del trapecio
+        }
+        return area;
     }
 </script>
 </body>
