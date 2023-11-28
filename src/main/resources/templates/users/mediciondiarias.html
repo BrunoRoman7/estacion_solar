@@ -74,12 +74,26 @@
                 <input type="date" class="form-control" id="desde" value="2023-07-01">
             </div>
         </div>
-        <div class="card mt-3" style="width: 200px;">
-            <div class="card-body">
-                <h5 class="card-title blue-text">IRRADIANCIA PROMEDIO:</h5>
-                <p class="card-text blue-text" id="resultado">...</p>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title blue-text">ÁREA BAJO LA CURVA:</h5>
+                        <p class="card-text blue-text" id="areaBajoCurva">...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title blue-text">IRRADIANCIA PROMEDIO:</h5>
+                        <p class="card-text blue-text" id="resultado">...</p>
+                    </div>
+                </div>
             </div>
         </div>
+
+
         <button class="btn btn-primary mt-3" onclick="generarGrafico()">Generar Gráfico</button>
     </div>
 </div>
@@ -188,6 +202,10 @@
                 // Llamar a la función para calcular el área bajo la curva
                 const areaBajoCurva = calcularAreaBajoCurva(fechas, radiaciones);
                 console.log('Área bajo la curva:', areaBajoCurva);
+
+                const areaBajoCurvaElement = document.getElementById('areaBajoCurva');
+                areaBajoCurvaElement.innerHTML = `<strong>${areaBajoCurva}</strong>`;
+
 
             }
 
