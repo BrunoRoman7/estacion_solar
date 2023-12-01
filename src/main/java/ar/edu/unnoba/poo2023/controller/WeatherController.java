@@ -1,6 +1,7 @@
 package ar.edu.unnoba.poo2023.controller;
 
 import ar.edu.unnoba.poo2023.model.Irradiacion;
+import ar.edu.unnoba.poo2023.service.CSVDataReader;
 import ar.edu.unnoba.poo2023.service.WeatherServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -34,11 +35,12 @@ public class WeatherController {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    @Autowired
+    private CSVDataReader csvDataReader;
 
     @GetMapping("/mediciondiarias")
     public String Grafico(){
-
-        return "users/mediciondiarias";
+        return "weathers/mediciondiarias";
     }
     @GetMapping("/Radiacion")
     @ResponseBody
@@ -130,9 +132,6 @@ try {
         Collections Collections = null;
         return Collections.emptyList();
     }
-
-
-
 
 
     @GetMapping("/irradiacionMaxima")
