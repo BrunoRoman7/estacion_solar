@@ -127,6 +127,7 @@
 
         const fecha = document.getElementById('desde').value;
 
+        //patnalla de carga
         document.getElementById('loader').style.display = 'block';
         document.getElementById('loader').querySelector('p').innerText = 'Consultando a la base de datos...';
         document.getElementById('mainContent').style.display = 'none';
@@ -143,7 +144,7 @@
             .then(datosEjemplo => {
 
                     document.getElementById('loader').querySelector('p').innerText = 'Procesando datos...';
-                console.log("dentro de fetch, antes del grafico");
+
                 const fechas = datosEjemplo.map(dato => new Date(dato.datosSensor.fecha));
                 const radiaciones = datosEjemplo.map(dato => dato.radiacion);
 

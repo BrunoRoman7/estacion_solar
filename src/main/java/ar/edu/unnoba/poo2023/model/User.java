@@ -31,8 +31,8 @@ public class User implements UserDetails {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    public User(int id, String username, String apellido, String email, String password) {
-        this.id = id;
+    public User(String username, String apellido, String email, String password) {
+
         this.username = username;
         this.apellido = apellido;
         this.email = email;
