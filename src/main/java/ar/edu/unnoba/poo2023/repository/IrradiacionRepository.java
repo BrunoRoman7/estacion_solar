@@ -14,14 +14,23 @@ public interface IrradiacionRepository extends JpaRepository<Irradiacion,Long>  
 
         @Query("SELECT i FROM Irradiacion i " +
                 "JOIN i.datosSensor ds " +
-                "WHERE ds.dia = :targetDay " +
-                "AND ds.año = :targetYear " +
-                "AND ds.mes = :targetMonth " +
+                "WHERE ds.dia = :dia " +
+                "AND ds.año = :anio " +
+                "AND ds.mes = :mes " +
                 "ORDER BY ds.fecha") // Ordenar por fecha
         List<Irradiacion> obtenerIrradiacionPorFecha(
-                @Param("targetDay") int targetDay,
-                @Param("targetYear") int targetYear,
-                @Param("targetMonth") int targetMonth);
+                @Param("dia") int dia,
+                @Param("anio") int anio,
+                @Param("mes") int mes);
+
+        @Query("SELECT i FROM Irradiacion i " +
+                "JOIN i.datosSensor ds " +
+                "WHERE YEAR(ds.fecha) = :anio " +
+                "AND MONTH(ds.fecha) = :mes " +
+                "ORDER BY ds.fecha") // Ordenar por fecha
+        List<Irradiacion> obtenerIrradiacionPorMesYAnio(
+                @Param("anio") int anio,
+                @Param("mes") int mes);
 
 
 
@@ -30,5 +39,6 @@ public interface IrradiacionRepository extends JpaRepository<Irradiacion,Long>  
 
         @Query("SELECT i FROM Irradiacion i WHERE MONTH(i.datosSensor.fecha) = :mes")
         List<Irradiacion> obtenerIrradiacionPorMes(Timestamp mes);
+
 
 }

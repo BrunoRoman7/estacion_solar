@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gráfico de Radiación con D3.js</title>
+    <!-- Agrega las referencias a Bootstrap y jQuery -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Agrega la referencia a D3.js -->
+
+    <style>
+        .loader {
+            /* Estilos anteriores... */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .loader img {
+            display: block;
+            margin: 0 auto; /* Centra la imagen */
+        }
+
+        .loader p {
+            margin-top: 10px; /* Ajusta el margen superior del párrafo */
+            text-align: center; /* Centra el texto horizontalmente */
+            font-weight: bold; /* Opcional: Añade negrita al texto */
+        }
+
+
+        /* Oculta el contenido principal al principio */
+        #mainContent {
+            display: none;
+        }
+
+        .resize-image {
+            /* Ajusta el tamaño de la imagen */
+            width: 50%; /* Puedes cambiar este valor según tu preferencia */
+            height: auto; /* Para mantener la proporción de la imagen */
+        }
+        .title {
+            font-size: 2em;
+            text-align: center;
+        }
+        .resize-image-small {
+            width: 200px; /* Define el ancho deseado */
+            height: auto; /* Mantén la proporción */
+        }
+        .blue-text {
+            color: #06a0e3;
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+<div id="loader" class="loader">
+    <img src="http://localhost:8080/sol.gif" alt="Cargando...">
+    <p>Cargando datos...</p>
+</div>
+
+<div id="mainContent" style="display: none;">
+    <h1 class="title blue-text">MEDICIONES MENSUALES <img src="http://localhost:8080/solazul.png" alt="Foto" class="resize-image-small"></h1>
+
+    <div class="container mt-4">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col">
+                    <label for="mes" class="blue-text">SELECTOR DEL MES:</label>
+                    <input type="month" class="form-control" id="mes" value="2023-07">
+                    <button onclick="capturarMes()">Capturar Mes</button>
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title blue-text">IRRADIANCIA MAXIMA MENSUAL :</h5>
+                        <p class="card-text blue-text" id="irradiacionmensual">...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title blue-text">PROMEDIO IRRADIANCIA MENSUAL:</h5>
+                        <p class="card-text blue-text" id="resultadopromedio">...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+<script>
+    function capturarMes() {
+        var mesSeleccionado = document.getElementById('mes').value;
+        console.log(mesSeleccionado)
+
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('loader').querySelector('p').innerText = 'Consultando a la base de datos...';
+        document.getElementById('mainContent').style.display = 'none';
+        const baseURL = 'http://localhost:8080';
+
+        const partes = mesSeleccionado.split("-");
+
+        const endpoint = '/radiacionmaximapormes';
+        const url = new URL(endpoint, baseURL);
+        url.searchParams.append('anio', parseInt(partes[0], 10));
+        url.searchParams.append('mes', parseInt(partes[1], 10));
+
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('La solicitud no fue exitosa');
+                }
+                return response.json(); // Procesa la respuesta como JSON
+            })
+            .then(data => {
+                const irradiacionmensual = document.getElementById('irradiacionmensual');
+                irradiacionmensual.innerHTML = `<strong>${data}</strong>`;
+                console.log('Datos recibidos:', data);
+            })
+            .catch(error => {
+                // Manejo de errores
+                console.error('Error al realizar la solicitud:', error);
+            });
+
+
+        //segunda cosnulta
+        const endpoint1 = '/irradiacionPromedio';
+        const url1 = new URL(endpoint1, baseURL);
+
+        url1.searchParams.append('anio', parseInt(partes[0], 10));
+        url1.searchParams.append('mes', parseInt(partes[1], 10));
+
+
+        fetch(url1)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('La solicitud no fue exitosa');
+                }
+                return response.json(); // Procesa la respuesta como JSON
+            })
+            .then(data => {
+                const irradiacionmensual = document.getElementById('resultadopromedio');
+                irradiacionmensual.innerHTML = `<strong>${data}</strong>`;
+                console.log('Datos recibidos:', data);
+                document.getElementById('loader').style.display = 'none';
+                // Muestra el contenido principal
+                document.getElementById('mainContent').style.display = 'block';
+                console.log("Termino de cargar datos ");
+            })
+            .catch(error => {
+                // Manejo de errores
+                console.error('Error al realizar la solicitud:', error);
+            });
+
+
+    }
+    document.getElementById('loader').style.display = 'none';
+    // Muestra el contenido principal
+    document.getElementById('mainContent').style.display = 'block';
+    console.log("Termino de cargar datos ");
+
+</script>
+</body>
+</html>
+

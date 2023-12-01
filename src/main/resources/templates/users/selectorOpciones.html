@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de selección</title>
+    <!-- Agrega las referencias a Bootstrap y jQuery -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        .loader {
+            /* Estilos anteriores... */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .loader img {
+            display: block;
+            margin: 0 auto; /* Centra la imagen */
+        }
+
+        .loader p {
+            margin-top: 10px; /* Ajusta el margen superior del párrafo */
+            text-align: center; /* Centra el texto horizontalmente */
+            font-weight: bold; /* Opcional: Añade negrita al texto */
+        }
+
+
+        /* Oculta el contenido principal al principio */
+        #mainContent {
+            display: none;
+        }
+
+        .resize-image {
+            /* Ajusta el tamaño de la imagen */
+            width: 50%; /* Puedes cambiar este valor según tu preferencia */
+            height: auto; /* Para mantener la proporción de la imagen */
+        }
+        .title {
+            font-size: 2em;
+            text-align: center;
+        }
+        .resize-image-small {
+            width: 100px; /* Define el ancho deseado */
+            height: auto; /* Mantén la proporción */
+        }
+        .blue-text {
+            color: #06a0e3;
+        }
+
+        .estilo-boton{
+            padding: 40px;
+            padding-bottom: 30px;
+            margin: auto;
+            width: fit-content;
+            background: #c2c6cf;
+            border: 1px solid black;
+            border-radius: 10px;
+        }
+
+        .resize-image-button{
+            width: 250px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .boton-margin-left{
+            margin-left: 20px !important;
+        }
+
+        .boton-margin-right{
+            margin-right: 20px !important;
+        }
+
+        .config-letras-botones{
+            margin-top: 20px;
+            text-align: center;
+            color: #06a0e3;
+        }
+
+        .contenedor-boton-cerrar-sesion{
+            margin-top: 5px;
+            margin-right: 5px;
+            margin-left: auto;
+            width: fit-content;
+            background: #c2c6cf;
+            border: 1px solid black;
+            border-radius: 15px;
+            padding: 6px;
+        }
+
+        .cerrar-sesion-text{
+            margin: 0px !important;
+            color: #06a0e3;
+            font-weight: bold;
+        }
+
+        .efecto-boton:active{
+            background: #a0a3ac;
+        }
+
+        .efecto-boton:hover{
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="boton-cerrar" class="contenedor-boton-cerrar-sesion efecto-boton">
+        <span class="cerrar-sesion-text">Cerrar Sesión</span>
+    </div>
+    <div id="mainContent" style="display: block;">
+        <h1 class="title blue-text">SELECCIONE QUE DATOS OBSERVAR <img src="http://localhost:8080/solazul.png" alt="Foto" class="resize-image-small"></h1>
+
+        <div style="display: flex;">
+            <div id="boton1" class="estilo-boton boton-margin-right efecto-boton">
+                <img src="http://localhost:8080/clock.png" alt="Foto" class="resize-image-button">
+                <h3 class="config-letras-botones">DATOS DIARIOS</h3>
+                
+            </div>
+            
+            <div id="boton2" class="estilo-boton boton-margin-left efecto-boton">
+                <img src="http://localhost:8080/calendar.png" alt="Foto" class="resize-image-button">
+                <h3 class="config-letras-botones">DATOS MENSUALES</h3>
+            </div>
+            
+        </div>
+
+
+</body>
+
+<script>
+
+    var boton_cerrar = document.getElementById("boton-cerrar");
+    boton_cerrar.addEventListener("click", function(){
+        window.location.href = "/"
+    });
+
+    var boton_cerrar = document.getElementById("boton1");
+    boton_cerrar.addEventListener("click", function(){
+        window.location.href = "http://localhost:8080/mediciondiarias"
+    });
+    var boton_cerrar = document.getElementById("boton2");
+    boton_cerrar.addEventListener("click", function(){
+        window.location.href = "http://localhost:8080/medicionesmes"
+    });
+
+
+</script>
+
+
+
+</html>

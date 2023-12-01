@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa; /* Color de fondo */
+        }
+
+        .table-container {
+            max-width: 800px; /* Ancho máximo de la tabla */
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+            border-radius: 8px; /* Bordes redondeados */
+        }
+        .badge badge-primary{
+            height: 200px;
+            width: 200px;
+        }
+
+        /* Estilos adicionales para la tabla */
+        table {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="table-container">
+    <h1 class="text-center mb-4">Usuarios List</h1>
+    <table class="table table-dark">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>username</th>
+            <th>apellido</th>
+            <th>email</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.apellido}"></td>
+            <td th:text="${user.email}"></td>
+            <td>
+                <a th:href="@{/users/{id}(id=${user.id})}">
+                    View</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="badge badge-primary btn-lg" th:href="@{/users/new}">New Client</a>
+</div>
+</body>
+</html>

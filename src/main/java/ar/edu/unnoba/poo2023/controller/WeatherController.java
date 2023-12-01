@@ -1,7 +1,6 @@
 package ar.edu.unnoba.poo2023.controller;
 
 import ar.edu.unnoba.poo2023.model.Irradiacion;
-import ar.edu.unnoba.poo2023.service.CSVDataReader;
 import ar.edu.unnoba.poo2023.service.WeatherServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -22,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,12 +33,21 @@ public class WeatherController {
     @Autowired
     private ResourceLoader resourceLoader;
 
-    @Autowired
-    private CSVDataReader csvDataReader;
 
     @GetMapping("/mediciondiarias")
     public String Grafico(){
-        return "weathers/mediciondiarias";
+
+        return "users/mediciondiarias";
+    }
+    @GetMapping("/medicionesmes")
+    public String medicionesmes(){
+
+        return "users/medicionmensual";
+    }
+    @GetMapping("/index")
+    public String Index(){
+
+        return "users/selectorOpciones";
     }
     @GetMapping("/Radiacion")
     @ResponseBody
@@ -71,6 +78,30 @@ public class WeatherController {
 
         // Lee el archivo en forma de Resource
         Resource resource = resourceLoader.getResource("classpath:/templates/static/images/solazul.png");
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_GIF)
+                .body(resource);
+    }
+    @GetMapping("/clock.png")
+    @ResponseBody
+    public ResponseEntity<Resource> getclock() throws IOException {
+
+
+        // Lee el archivo en forma de Resource
+        Resource resource = resourceLoader.getResource("classpath:/templates/static/images/clock.png");
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_GIF)
+                .body(resource);
+    }
+    @GetMapping("/calendar.png")
+    @ResponseBody
+    public ResponseEntity<Resource> getcalendar() throws IOException {
+
+
+        // Lee el archivo en forma de Resource
+        Resource resource = resourceLoader.getResource("classpath:/templates/static/images/calendar.png");
 
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_GIF)
@@ -112,6 +143,25 @@ try {
 
         return weatherServiceImplementation.getRadiacionPorFechas(fechaDesde, fechaHasta);
     }
+    @GetMapping("/radiacionmaximapormes")
+    @ResponseBody
+    public Double radiacionmaximapormes(@RequestParam(required = false) int anio,
+                                  @RequestParam(required = false) int mes) {
+
+       List<Irradiacion> list=weatherServiceImplementation.getRadiacionPorMes(mes, anio);
+        Double cant= (double) 0;
+        for(Irradiacion i: list){
+            if (i.getRadiacion() > cant){
+                cant = i.getRadiacion();
+            }
+        }
+        return cant;
+
+
+    }
+
+
+
     @GetMapping("/radiacionporfecha")
     @ResponseBody
     public List<Irradiacion> datosClima(@RequestParam(required = false) String fecha) {
@@ -128,29 +178,16 @@ try {
             }
         }
 
-
-        Collections Collections = null;
-        return Collections.emptyList();
-    }
-
-
-    @GetMapping("/irradiacionMaxima")
-    @ResponseBody
-    public Double irradianciaMax(Timestamp mes){
-        List<Irradiacion> list = weatherServiceImplementation.getRadiacionMensual(mes);
-        Double cant= (double) 0;
-        for(Irradiacion i: list){
-            if (i.getRadiacion() > cant){
-                cant = i.getRadiacion();
-            }
-        }
-        return cant;
+        return null;
     }
 
     @GetMapping("/irradiacionPromedio")
     @ResponseBody
-    public Double irradianciaPromedio(Timestamp mes){
-        List<Irradiacion> list = weatherServiceImplementation.getRadiacionMensual(mes);
+    public Double irradiacionPromedio(@RequestParam(required = false) int anio,
+                                        @RequestParam(required = false) int mes) {
+
+        List<Irradiacion> list=weatherServiceImplementation.getRadiacionPorMes(mes, anio);
+
         int cant = list.size();
         Double suma= (double) 0;
         for(Irradiacion i: list){

@@ -15,6 +15,7 @@ public class Poo2023Application {
 
 }
 
+
 @Configuration
 class WebConfig implements WebMvcConfigurer {
 
