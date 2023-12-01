@@ -32,7 +32,7 @@ public class SecurityConfig {
                 )
                 .formLogin((form) -> form
                         .permitAll()
-                        .defaultSuccessUrl("/Template/users")
+                        .defaultSuccessUrl("/index")
                 )
                 .logout().
                 logoutUrl("/logout").
