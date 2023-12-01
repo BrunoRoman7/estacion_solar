@@ -50,6 +50,11 @@
             color: #06a0e3;
         }
 
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
     </style>
 
@@ -62,6 +67,8 @@
 </div>
 
 <div id="mainContent" style="display: none;">
+    <button class="btn btn-primary mt-3" onclick="goBack()">Regresar</button>
+
     <h1 class="title blue-text">MEDICIONES MENSUALES <img src="http://localhost:8080/solazul.png" alt="Foto" class="resize-image-small"></h1>
 
     <div class="container mt-4">
@@ -70,7 +77,7 @@
                 <div class="col">
                     <label for="mes" class="blue-text">SELECTOR DEL MES:</label>
                     <input type="month" class="form-control" id="mes" value="2023-07">
-                    <button onclick="capturarMes()">Capturar Mes</button>
+                    <button class="btn btn-primary mt-3" onclick="capturarMes()">Capturar Mes</button>
                 </div>
             </div>
         <div class="row">
@@ -91,14 +98,16 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
 </div>
 
 
 <script>
+
+    function goBack() {
+        window.history.back();
+    }
+
     function capturarMes() {
         var mesSeleccionado = document.getElementById('mes').value;
         console.log(mesSeleccionado)
@@ -125,7 +134,7 @@
             })
             .then(data => {
                 const irradiacionmensual = document.getElementById('irradiacionmensual');
-                irradiacionmensual.innerHTML = `<strong>${data}</strong>`;
+                irradiacionmensual.innerHTML = `<strong>${data}</strong> Watts por metro2`;
                 console.log('Datos recibidos:', data);
             })
             .catch(error => {
@@ -151,7 +160,7 @@
             })
             .then(data => {
                 const irradiacionmensual = document.getElementById('resultadopromedio');
-                irradiacionmensual.innerHTML = `<strong>${data}</strong>`;
+                irradiacionmensual.innerHTML = `<strong>${data}</strong> Watts por metro2`;
                 console.log('Datos recibidos:', data);
                 document.getElementById('loader').style.display = 'none';
                 // Muestra el contenido principal

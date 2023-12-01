@@ -53,6 +53,12 @@
             color: #06a0e3;
         }
 
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
 
     </style>
 
@@ -65,6 +71,8 @@
 </div>
 
 <div id="mainContent" style="display: none;">
+    <button class="btn btn-primary mt-3" onclick="goBack()">Regresar</button>
+
     <h1 class="title blue-text">MEDICIONES DIARIAS <img src="http://localhost:8080/solazul.png" alt="Foto" class="resize-image-small"></h1>
 
     <div class="container mt-4">
@@ -144,7 +152,7 @@
 
                     console.log('Promedio de todos los datos de radiación:', promedioTotal);
                     const resultadoHTML = document.getElementById('resultado');
-                    resultadoHTML.innerHTML = `<strong>${promedioTotal} </strong>`;
+                    resultadoHTML.innerHTML = `<strong>${promedioTotal} </strong> Watts por metro2`;
 
 
 
@@ -204,7 +212,7 @@
                 console.log('Área bajo la curva:', areaBajoCurva);
 
                 const areaBajoCurvaElement = document.getElementById('areaBajoCurva');
-                areaBajoCurvaElement.innerHTML = `<strong>${areaBajoCurva}</strong>`;
+                areaBajoCurvaElement.innerHTML = `<strong>${areaBajoCurva}</strong> KiloWatts por dia por m2`;
 
 
             }
@@ -223,7 +231,12 @@
             const alturaPromedio = (radiaciones[i] + radiaciones[i + 1]) / 2; // Altura promedio de los dos puntos
             area += base * alturaPromedio; // Área del trapecio
         }
-        return area;
+        return area/100000000;
+    }
+
+
+    function goBack() {
+        window.history.back();
     }
 </script>
 </body>
