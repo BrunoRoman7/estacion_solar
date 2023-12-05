@@ -7,10 +7,14 @@ import ar.edu.unnoba.poo2023.model.Viento;
 import ar.edu.unnoba.poo2023.repository.DatosSensorRepository;
 import ar.edu.unnoba.poo2023.repository.IrradiacionRepository;
 import ar.edu.unnoba.poo2023.repository.VientoRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -29,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class PeriodicHttpRequest {
 
 
-    public  void consulta(IrradiacionRepository irradiacionRepository, DatosSensorRepository datosSensorRepository, VientoRepository vientoRepository) {
+    public void consulta(IrradiacionRepository irradiacionRepository, DatosSensorRepository datosSensorRepository, VientoRepository vientoRepository, JedisPool pool) {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
         // Programar la tarea para ejecutarse cada 5 minutos
@@ -60,7 +64,7 @@ public class PeriodicHttpRequest {
 
                 System.out.println("Respuesta de la solicitud HTTP:");
 
-                HtmlParser(response.toString(), datosSensorRepository, irradiacionRepository, vientoRepository);
+                HtmlParser(response.toString(), datosSensorRepository, irradiacionRepository, vientoRepository,pool);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -72,7 +76,7 @@ public class PeriodicHttpRequest {
             System.out.println("Tarea periódica detenida");
         }, 30, TimeUnit.MINUTES);
     }
-    private static void HtmlParser(String html, DatosSensorRepository datosSensorRepository, IrradiacionRepository irradiacionRepository, VientoRepository vientoRepository){
+    private static void HtmlParser(String html, DatosSensorRepository datosSensorRepository, IrradiacionRepository irradiacionRepository, VientoRepository vientoRepository, JedisPool pool){
 
             Document doc = Jsoup.parse(html);
 
@@ -116,8 +120,20 @@ public class PeriodicHttpRequest {
 
                     Viento viento = new Viento(datosSensor, direccionViento, velocidad);
                     vientoRepository.save(viento);
-
-
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    try (Jedis jedis = pool.getResource()) {
+                        try {
+                            String irradiacionEnJSON = objectMapper.writeValueAsString(irradiacion);
+                            String clave = "irradiacion:" + irradiacion.getDatosSensor().getFecha().toString();
+                            jedis.set(clave, irradiacionEnJSON);
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                            // Manejo de errores de serialización a JSON
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        // Manejo de excepciones al obtener la conexión de Redis
+                    }
 
                 } else {
                     System.out.println("No se pudieron obtener todos los valores necesarios.");

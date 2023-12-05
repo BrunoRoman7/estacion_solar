@@ -35,11 +35,13 @@ public class DatosSensor {
         return idDatosSensor;
     }
 
+    // Setter para long
     public void setIdDatosSensor(long idDatosSensor) {
         this.idDatosSensor = idDatosSensor;
     }
 
-    public void setIdDatosSensor(int idDatosSensor) {
+    // Setter para int (renombrado)
+    public void setIdDatosSensorAsInt(int idDatosSensor) {
         this.idDatosSensor = idDatosSensor;
     }
 

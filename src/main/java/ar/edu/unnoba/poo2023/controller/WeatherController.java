@@ -145,19 +145,22 @@ try {
     }
     @GetMapping("/radiacionmaximapormes")
     @ResponseBody
-    public Double radiacionmaximapormes(@RequestParam(required = false) int anio,
-                                  @RequestParam(required = false) int mes) {
+    public  List<Irradiacion> radiacionmaximapormes(@RequestParam(required = false) int anio,
+                                                              @RequestParam(required = false) int mes) {
 
-       List<Irradiacion> list=weatherServiceImplementation.getRadiacionPorMes(mes, anio);
-        Double cant= (double) 0;
-        for(Irradiacion i: list){
-            if (i.getRadiacion() > cant){
-                cant = i.getRadiacion();
-            }
-        }
-        return cant;
+        List<Irradiacion> list = weatherServiceImplementation.getRadiacionPorMes(mes, anio);
 
+        return list;
+    }
 
+    @GetMapping("/irradiacionPromedio")
+    @ResponseBody
+    public  List<Irradiacion> irradiacionPromedio(@RequestParam(required = false) int anio,
+                                                            @RequestParam(required = false) int mes) {
+
+        List<Irradiacion> list = weatherServiceImplementation.getRadiacionPorMes(mes, anio);
+
+        return list;
     }
 
 
@@ -181,20 +184,7 @@ try {
         return null;
     }
 
-    @GetMapping("/irradiacionPromedio")
-    @ResponseBody
-    public Double irradiacionPromedio(@RequestParam(required = false) int anio,
-                                        @RequestParam(required = false) int mes) {
 
-        List<Irradiacion> list=weatherServiceImplementation.getRadiacionPorMes(mes, anio);
-
-        int cant = list.size();
-        Double suma= (double) 0;
-        for(Irradiacion i: list){
-            suma += i.getRadiacion();
-        }
-        return suma/cant;
-    }
 
     @GetMapping("/cargabd")
     public String cargarbd() {

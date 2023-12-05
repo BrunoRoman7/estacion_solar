@@ -123,7 +123,9 @@
         const url = new URL(endpoint, baseURL);
         url.searchParams.append('anio', parseInt(partes[0], 10));
         url.searchParams.append('mes', parseInt(partes[1], 10));
+        const tiempoInicial = performance.now();
 
+        let cant = 0; // Inicializa el valor máximo en 0
 
         fetch(url)
             .then(response => {
@@ -132,40 +134,37 @@
                 }
                 return response.json(); // Procesa la respuesta como JSON
             })
-            .then(data => {
-                const irradiacionmensual = document.getElementById('irradiacionmensual');
-                irradiacionmensual.innerHTML = `<strong>${data}</strong> Watts por metro2`;
-                console.log('Datos recibidos:', data);
-            })
-            .catch(error => {
-                // Manejo de errores
-                console.error('Error al realizar la solicitud:', error);
-            });
-
-
-        //segunda cosnulta
-        const endpoint1 = '/irradiacionPromedio';
-        const url1 = new URL(endpoint1, baseURL);
-
-        url1.searchParams.append('anio', parseInt(partes[0], 10));
-        url1.searchParams.append('mes', parseInt(partes[1], 10));
-
-
-        fetch(url1)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('La solicitud no fue exitosa');
+            .then(list => {
+                const cantidad = list.length;
+                let suma = 0;
+                for (let i = 0; i < list.length; i++) {
+                    if (list[i].radiacion > cant) {
+                        cant = list[i].radiacion;
+                        suma += list[i].radiacion;
+                    }
                 }
-                return response.json(); // Procesa la respuesta como JSON
-            })
-            .then(data => {
-                const irradiacionmensual = document.getElementById('resultadopromedio');
-                irradiacionmensual.innerHTML = `<strong>${data}</strong> Watts por metro2`;
-                console.log('Datos recibidos:', data);
+
+                console.log(cant); // Imprime el valor máximo de radiación encontrado
+                const irradiacionmensual = document.getElementById('irradiacionmensual');
+                irradiacionmensual.innerHTML = `<strong>${cant}</strong> Watts por metro2`; // Muestra el valor máximo en HTML
+                console.log('Valor máximo de radiación mensual:', cant);
+                const tiempoFinal = performance.now();
+                const promedio = suma / cantidad;
+
+                console.log('Promedio:', promedio);
+
+                const irradiacionMensual = document.getElementById('resultadopromedio');
+                irradiacionMensual.innerHTML = `<strong>${promedio}</strong> Watts por metro2`;
+
+                console.log('Promedio de irradiación recibido:', promedio);
+
                 document.getElementById('loader').style.display = 'none';
-                // Muestra el contenido principal
                 document.getElementById('mainContent').style.display = 'block';
-                console.log("Termino de cargar datos ");
+                console.log('Datos cargados.');
+
+// Calculamos la duración en milisegundos
+                const duracion = tiempoFinal - tiempoInicial;
+                console.log(`La consulta tardó ${duracion} milisegundos.`);
             })
             .catch(error => {
                 // Manejo de errores

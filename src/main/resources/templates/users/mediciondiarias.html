@@ -131,7 +131,7 @@
         document.getElementById('loader').style.display = 'block';
         document.getElementById('loader').querySelector('p').innerText = 'Consultando a la base de datos...';
         document.getElementById('mainContent').style.display = 'none';
-    console.log("Pidiendo los datos ");
+    console.log(`http://localhost:8080/radiacionporfecha?fecha=${fecha}`);
         fetch(`http://localhost:8080/radiacionporfecha?fecha=${fecha}`)
             .then(response => {
 

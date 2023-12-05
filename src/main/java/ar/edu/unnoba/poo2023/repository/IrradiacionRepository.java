@@ -25,9 +25,9 @@ public interface IrradiacionRepository extends JpaRepository<Irradiacion,Long>  
 
         @Query("SELECT i FROM Irradiacion i " +
                 "JOIN i.datosSensor ds " +
-                "WHERE YEAR(ds.fecha) = :anio " +
-                "AND MONTH(ds.fecha) = :mes " +
-                "ORDER BY ds.fecha") // Ordenar por fecha
+                "WHERE i.datosSensor.año = :anio " +
+                "AND i.datosSensor.mes= :mes " +
+                "ORDER BY i.datosSensor.fecha") // Ordenar por fecha
         List<Irradiacion> obtenerIrradiacionPorMesYAnio(
                 @Param("anio") int anio,
                 @Param("mes") int mes);
