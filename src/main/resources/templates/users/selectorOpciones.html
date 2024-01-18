@@ -114,17 +114,17 @@
         <span class="cerrar-sesion-text">Cerrar Sesión</span>
     </div>
     <div id="mainContent" style="display: block;">
-        <h1 class="title blue-text">SELECCIONE QUE DATOS OBSERVAR <img src="http://localhost:8080/solazul.png" alt="Foto" class="resize-image-small"></h1>
+        <h1 class="title blue-text">SELECCIONE QUE DATOS OBSERVAR <img src="/solazul.png" alt="Foto" class="resize-image-small"></h1>
 
         <div style="display: flex;">
             <div id="boton1" class="estilo-boton boton-margin-right efecto-boton">
-                <img src="http://localhost:8080/clock.png" alt="Foto" class="resize-image-button">
+                <img src="/clock.png" alt="Foto" class="resize-image-button">
                 <h3 class="config-letras-botones">DATOS DIARIOS</h3>
                 
             </div>
             
             <div id="boton2" class="estilo-boton boton-margin-left efecto-boton">
-                <img src="http://localhost:8080/calendar.png" alt="Foto" class="resize-image-button">
+                <img src="/calendar.png" alt="Foto" class="resize-image-button">
                 <h3 class="config-letras-botones">DATOS MENSUALES</h3>
             </div>
             
@@ -142,11 +142,11 @@
 
     var boton_cerrar = document.getElementById("boton1");
     boton_cerrar.addEventListener("click", function(){
-        window.location.href = "http://localhost:8080/mediciondiarias"
+        window.location.href = "/mediciondiarias"
     });
     var boton_cerrar = document.getElementById("boton2");
     boton_cerrar.addEventListener("click", function(){
-        window.location.href = "http://localhost:8080/medicionesmes"
+        window.location.href = "/medicionesmes"
     });
 
 

@@ -110,30 +110,40 @@ public class PeriodicHttpRequest {
                     int dia = calendar.get(Calendar.DAY_OF_MONTH);
 
                     System.out.println("Fecha: " + timestamp + ", año: " + año + ", mes: " + mes + ", dia: " + dia);
+                    if(radiacion!=3){//deberia poner si son desde las 5;30 hasta las 8:30
 
-                    // Crear las entidades y guardarlas en los repositorios correspondientes
-                    DatosSensor datosSensor = new DatosSensor(timestamp, año, mes, dia);
-                    datosSensorRepository.save(datosSensor);
+                        // Crear las entidades y guardarlas en los repositorios correspondientes
+                        DatosSensor datosSensor = new DatosSensor(timestamp, año, mes, dia);
+                        datosSensorRepository.save(datosSensor);
 
-                    Irradiacion irradiacion = new Irradiacion(datosSensor, radiacion);
-                    irradiacionRepository.save(irradiacion);
+                        Irradiacion irradiacion = new Irradiacion(datosSensor, radiacion);
+                        irradiacionRepository.save(irradiacion);
 
-                    Viento viento = new Viento(datosSensor, direccionViento, velocidad);
-                    vientoRepository.save(viento);
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    try (Jedis jedis = pool.getResource()) {
-                        try {
-                            String irradiacionEnJSON = objectMapper.writeValueAsString(irradiacion);
-                            String clave = "irradiacion:" + irradiacion.getDatosSensor().getFecha().toString();
-                            jedis.set(clave, irradiacionEnJSON);
-                        } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                            // Manejo de errores de serialización a JSON
+                        Viento viento = new Viento(datosSensor, direccionViento, velocidad);
+                        vientoRepository.save(viento);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        try (Jedis jedis = pool.getResource()) { //carga de radaicion en redis, por ahora solo radiaccion
+                            try {
+                                String irradiacionEnJSON = objectMapper.writeValueAsString(irradiacion);
+                                String clave = "irradiacion:" + irradiacion.getDatosSensor().getFecha().toString();
+                                jedis.set(clave, irradiacionEnJSON);
+                            } catch (JsonProcessingException e) {
+                                e.printStackTrace();
+                                // Manejo de errores de serialización a JSON
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            // Manejo de excepciones al obtener la conexión de Redis
                         }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        // Manejo de excepciones al obtener la conexión de Redis
+                    }else{
+                        DatosSensor datosSensor = new DatosSensor(timestamp, año, mes, dia);
+                        datosSensorRepository.save(datosSensor);
+                        Viento viento = new Viento(datosSensor, direccionViento, velocidad);
+                        vientoRepository.save(viento);
+
+                        System.out.println("Los valores de radiacion son demasiado bajo, no se cargan en la base de datos ");
                     }
+
 
                 } else {
                     System.out.println("No se pudieron obtener todos los valores necesarios.");

@@ -59,15 +59,26 @@ public class CSVDataReader {
 
                     System.out.println("Fecha: " + timestamp + ", año: " + año + ", mes: " + mes + ", dia: " + dia);
 
-                    // Crear las entidades y guardarlas en los repositorios correspondientes
-                    DatosSensor datosSensor = new DatosSensor(timestamp, año, mes, dia);
-                    datosSensorRepository.save(datosSensor);
+                    if(radiacion!=3){//deberia poner si son desde las 5;30 hasta las 8:30
+                        // Crear las entidades y guardarlas en los repositorios correspondientes
+                        DatosSensor datosSensor = new DatosSensor(timestamp, año, mes, dia);
+                        datosSensorRepository.save(datosSensor);
 
-                    Irradiacion irradiacion = new Irradiacion(datosSensor, radiacion);
-                    irradiacionRepository.save(irradiacion);
+                        Irradiacion irradiacion = new Irradiacion(datosSensor, radiacion);
+                        irradiacionRepository.save(irradiacion);
 
-                    Viento viento = new Viento(datosSensor, direccionViento, velocidad);
-                    vientoRepository.save(viento);
+                        Viento viento = new Viento(datosSensor, direccionViento, velocidad);
+                        vientoRepository.save(viento);
+                    }else{
+                        // Crear las entidades y guardarlas en los repositorios correspondientes
+                        DatosSensor datosSensor = new DatosSensor(timestamp, año, mes, dia);
+                        datosSensorRepository.save(datosSensor);
+                        //si es igual a 3 no lo cargamos en la base de datos, porque no tiene sentido.
+
+                        Viento viento = new Viento(datosSensor, direccionViento, velocidad);
+                        vientoRepository.save(viento);
+                    }
+
                 });
             }
         } catch (Exception e) {

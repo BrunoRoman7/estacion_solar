@@ -62,14 +62,14 @@
 </head>
 <body>
 <div id="loader" class="loader">
-    <img src="http://localhost:8080/sol.gif" alt="Cargando...">
+    <img src="/sol.gif" alt="Cargando...">
     <p>Cargando datos...</p>
 </div>
 
 <div id="mainContent" style="display: none;">
     <button class="btn btn-primary mt-3" onclick="goBack()">Regresar</button>
 
-    <h1 class="title blue-text">MEDICIONES MENSUALES <img src="http://localhost:8080/solazul.png" alt="Foto" class="resize-image-small"></h1>
+    <h1 class="title blue-text">MEDICIONES MENSUALES <img src="/solazul.png" alt="Foto" class="resize-image-small"></h1>
 
     <div class="container mt-4">
         <div class="container mt-4">
@@ -105,8 +105,9 @@
 <script>
 
     function goBack() {
-        window.history.back();
+        window.location.href = '/index';
     }
+
 
     function capturarMes() {
         var mesSeleccionado = document.getElementById('mes').value;
@@ -115,19 +116,17 @@
         document.getElementById('loader').style.display = 'block';
         document.getElementById('loader').querySelector('p').innerText = 'Consultando a la base de datos...';
         document.getElementById('mainContent').style.display = 'none';
-        const baseURL = 'http://localhost:8080';
 
-        const partes = mesSeleccionado.split("-");
+        const partesFecha = mesSeleccionado.split('-');
 
-        const endpoint = '/radiacionmaximapormes';
-        const url = new URL(endpoint, baseURL);
-        url.searchParams.append('anio', parseInt(partes[0], 10));
-        url.searchParams.append('mes', parseInt(partes[1], 10));
+
+        const anio = partesFecha[0];
+        const mes = partesFecha[1];
         const tiempoInicial = performance.now();
 
         let cant = 0; // Inicializa el valor máximo en 0
 
-        fetch(url)
+        fetch("/radiacionmaximapormes?anio="+anio+"&mes="+mes)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('La solicitud no fue exitosa');
@@ -138,9 +137,9 @@
                 const cantidad = list.length;
                 let suma = 0;
                 for (let i = 0; i < list.length; i++) {
+                    suma += list[i].radiacion;
                     if (list[i].radiacion > cant) {
                         cant = list[i].radiacion;
-                        suma += list[i].radiacion;
                     }
                 }
 
@@ -162,7 +161,7 @@
                 document.getElementById('mainContent').style.display = 'block';
                 console.log('Datos cargados.');
 
-// Calculamos la duración en milisegundos
+                // Calculamos la duración en milisegundos
                 const duracion = tiempoFinal - tiempoInicial;
                 console.log(`La consulta tardó ${duracion} milisegundos.`);
             })
